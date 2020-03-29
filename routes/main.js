@@ -10,7 +10,7 @@ router.get('/', middleware.isLoggedIn, function(req , res) {
   let i = 1;
   let today = new Date();
   let todayDate = today.toISOString().substring(0, 10);
-  let maxQuery = `select count(*) as incoming from cdr where dcontext='ext-queues' and calldate like '${todayDate}%'; select count(*) as outgoing from cdr where RemoteIP='172.16.12.39' and calldate like '2020-03-19%'; SELECT * FROM cdr WHERE calldate LIKE '${todayDate}%' ORDER BY billsec DESC LIMIT 5;select sum(billsec) as sum from cdr where disposition='ANSWERED' and RemoteIP='172.16.12.39' and calldate like '${todayDate}%'; `
+  let maxQuery = `select count(*) as incoming from cdr where dcontext='ext-queues' and calldate like '${todayDate}%'; select count(*) as outgoing from cdr where RemoteIP='172.16.12.39' and calldate like '${todayDate}%'; SELECT * FROM cdr WHERE calldate LIKE '${todayDate}%' ORDER BY billsec DESC LIMIT 5;select sum(billsec) as sum from cdr where disposition='ANSWERED' and RemoteIP='172.16.12.39' and calldate like '${todayDate}%'; `
   db.getConnection(function(err , connection){
     connection.query(maxQuery, function(error, results,fields) {
       connection.release()
