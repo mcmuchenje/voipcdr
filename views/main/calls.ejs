@@ -1,0 +1,167 @@
+<%- include('../partials/header'); %>
+
+ <section class="section">
+      <div class="columns">
+        <div class="column is-4-tablet is-3-desktop is-2-widescreen">
+          <nav class="menu">
+            <p class="menu-label">
+              Menu
+            </p>
+            <ul class="menu-list">
+              <li>
+                <a href="/voice">
+                  <span class="icon">
+                    <i class="fa fa-tachometer"></i>
+                  </span>
+                  Dashboard
+                  </a>
+              </li>
+              <li>
+                <a href="/voice/extensions">
+                  <span class="icon">
+                    <i class="fa fa-address-book"></i>
+                  </span>
+                  Extensions
+                </a>
+              </li>
+              <li>
+                <a class="is-active" href="/voice/calls/1">
+                  <span class="icon">
+                    <i class="fa fa-phone"></i>
+                  </span>
+                  Calls
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="column">
+          <h1 class="title ">Calls</h1>
+
+          <nav class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <p class="subtitle is-5">
+                  <strong><%= total.rows %></strong> calls
+                </p>
+              </div>
+              <div class="level-item is-hidden-tablet-only">
+                <div class="field has-addons">
+                  <p class="control">
+                    <input class="input" type="text" placeholder="Extension #, User…">
+                  </p>
+                  <p class="control">
+                    <button class="button">
+                      Search
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="level-right">
+              <div class="select">
+                <select>
+                  <option>Today</option>
+                  <option>Yesterday</option>
+                  <option>This Week</option>
+                  <option selected>This Month</option>
+                  <option>This Year</option>
+                  <option>All time</option>
+                </select>
+              </div>
+            </div>
+          </nav>
+
+          <table class="table is-hoverable is-fullwidth is-striped">
+            <thead>
+              <tr>
+	        <th>Call Time</th>
+                <th>Caller ID</th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Time (mins)</th>
+                <th>Status</th>
+                <th class="has-text-right">Total</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+	        <th>Call Time</th>
+                <th>Caller ID</th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Time (mins)</th>
+                <th>Status</th>
+                <th class="has-text-right">Total</th>
+              </tr>
+            </tfoot>
+            <tbody>
+
+              <% calls.forEach(function(call){ %>
+              <tr>
+	        <td><%= call.calldate.toString().slice(0,25) %></td> 
+                <td>
+<strong><%= call.clid %></strong>
+                </td>
+                <td>
+<%= call.src %>
+                </td>
+                <td><%= call.dst %></td>
+                <td><%= (call.billsec / 60).toFixed(2) %></td>
+                <td>
+                  <% if(call.disposition === 'ANSWERED'){ %>
+                      <span class="tag is-success">Answered</span>
+                   <%  } else { %>
+                      <span class="tag is-warning">Not Answered</span>
+                   <%  } %>
+                </td>
+                <% if((call.RemoteIP === '172.16.12.39' || call.RemoteIP === '41.216.127.214') & call.disposition === 'ANSWERED' ){ %>
+                <td class="has-text-right"><strong>$<%= ((call.billsec / 60) * 0.85).toFixed(2) %></strong></td>
+                <%  } else { %>
+                  <td class="has-text-right"><strong>$0</strong></td>
+                  <%  } %>
+              </tr>
+               <% }); %>
+
+
+            </tbody>
+          </table>
+
+
+<nav class="pagination">
+            <% if (pages > 0) { %>
+                <ul class="pagination-list">
+                    <% if (current == 1) { %>
+                        <li class="disabled"><a class="pagination-link">First</a></li>
+                    <% } else { %>
+                        <li><a href="/voice/calls/1" class="pagination-link">First</a></li>
+                    <% } %>
+                    <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                    <% if (i !== 1) { %>
+                        <li class="disabled"><a class="pagination-link">...</a></li>
+                    <% } %>
+                    <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                        <% if (i == current) { %>
+                            <li><a class="pagination-link is-current"><%= i %></a></li>
+                        <% } else { %>
+                            <li><a class="pagination-link" href="/voice/calls/<%= i %>"><%= i %></a></li>
+                        <% } %>
+                        <% if (i == Number(current) + 4 && i < pages) { %>
+                            <li><a class="pagination-link">...</a></li>
+                        <% } %>
+                    <% } %>
+                    <% if (current == pages) { %>
+                        <li><a class="pagination-link">Last</a></li>
+                    <% } else { %>
+                        <li><a class="pagination-link" href="/voice/calls/<%= pages %>">Last</a></li>
+                    <% } %>
+                </ul>
+            <% } %>
+			</nav>
+        </div>
+      </div>
+    </section>
+
+<%- include('../partials/footer'); %>

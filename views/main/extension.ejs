@@ -1,0 +1,90 @@
+<%- include('../partials/header'); %>
+
+    <section class="section">
+      <div class="columns">
+        <div class="column is-4-tablet is-3-desktop is-2-widescreen">
+          <nav class="menu">
+            <p class="menu-label">
+              Menu
+            </p>
+            <ul class="menu-list">
+              <li>
+                <a href="/voice">
+                  <span class="icon">
+                    <i class="fa fa-tachometer"></i>
+                  </span>
+                  Dashboard
+                  </a>
+              </li>
+              <li>
+                <a class="is-active" href="/voice/extensions">
+                  <span class="icon">
+                    <i class="fa fa-address-book"></i>
+                  </span>
+                  Extensions
+                </a>
+              </li>
+              <li>
+                <a href="/voice/calls/1">
+                  <span class="icon">
+                    <i class="fa fa-phone"></i>
+                  </span>
+                  Calls
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="column">
+          <h1 class="title ">Extensions</h1>
+          
+          <table class="table is-hoverable is-fullwidth">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Extension</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Extension</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </tfoot>
+            <tbody>
+
+	    <% sip.forEach(function(sip){ %>
+              <tr>
+                <td>
+                    <strong><%= sip.description  %></strong>
+                </td>
+                <td><code>daniel@willdale.co.zw</code></td>
+                <td>
+                  <span><%= sip.user %></span>
+                </td>
+                <td>
+                  <span class="tag is-success">Active</span>
+                </td>
+                <td>
+                  <div class="buttons">
+                    <a class="button is-small is-success">Enable</a>
+                    <a class="button is-small is-warning">Disable</a>
+                  </div>
+                </td>
+              </tr>
+             <% }); %>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+<%- include('../partials/footer'); %>

@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css?family=Karla:400,700|Rubik:400,500,700');
+
+// New variables
+$family-heading: "Rubik", BlinkMacSystemFont, -apple-system, "Helvetica", "Arial", sans-serif;
+$large-shadow: 0 10px 20px rgba(#000, 0.05);
+
+// Initial variables
+$turquoise: #5dd52a;
+$red: #D30012;
+$yellow: #FFF200;
+$green: #24D17D;
+$blue: #525adc;
+
+$family-sans-serif: "Karla", BlinkMacSystemFont, -apple-system, "Helvetica", "Arial", sans-serif;
+
+$radius: 5px;
+
+// Import the rest of Bulma's initial variables
+@import "node_modules/bulma/sass/utilities/initial-variables";
+
+$body-background-color: $white-ter;
+
+$box-padding: 2rem;
+$box-shadow: $large-shadow;
+
+$card-shadow: $large-shadow;
+
+$column-gap: 1rem;
+
+$button-focus-box-shadow-color: rgba($black, 0.1);
+
+$input-arrow: $red;
+$input-focus-box-shadow-color: rgba($black, 0.1);
+
+$menu-item-color: $grey;
+$menu-item-hover-background-color: transparent;
+$menu-item-active-background-color: $white;
+$menu-item-active-color: $black;
+$menu-item-radius: $radius;
+
+$navbar-height: 6rem;
+$navbar-item-img-max-height: 3rem;
+$navbar-item-hover-background-color: transparent;
+$navbar-dropdown-border-top: none;
+
+$table-cell-border: 2px solid $white-ter;
+$table-cell-padding: 0.75em 1.5em;
+
+@import "node_modules/bulma/bulma";
+
+// @debug colorLuminance($turquoise);
+
+%heading {
+  font-family: $family-heading;
+  font-weight: 500;
+}
+
+$control-size: 2.75em;
+
+.button,
+.input,
+.select select,
+.pagination-previous,
+.pagination-next,
+.pagination-link {
+  border-width: 0;
+  box-shadow: none;
+  height: $control-size;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.control.has-icons-left {
+  .input,
+  .select select {
+    padding-left: $control-size;
+  }
+
+  .icon {
+    height: $control-size;
+    width: $control-size;
+  }
+}
+
+.select {
+  &:not(.is-multiple) {
+    height: $control-size;
+  }
+}
+
+.select select {
+  &:not([multiple]) {
+    padding-right: $control-size;
+  }
+}
+
+.button {
+  &.is-outlined {
+    border-width: 2px;
+  }
+}
+
+.file-cta,
+.file-name {
+  background-color: $white;
+  border-width: 0;
+}
+
+.button {
+  @extend %heading;
+  background-color: rgba(#000, 0.05);
+  text-transform: uppercase;
+}
+
+.breadcrumb {
+  @extend %heading;
+  text-transform: uppercase;
+}
+
+.pagination {
+  @extend %heading;
+}
+
+.pagination-previous,
+.pagination-next,
+.pagination-link {
+  background-color: $white;
+  border-width: 0;
+  min-width: $control-size;
+}
+
+.menu {
+  @extend %heading;
+  text-transform: uppercase;
+}
+
+.menu-label {
+  display: none;
+}
+
+.menu-list {
+  a {
+    padding: 0.75em 1em;
+
+    .icon {
+      color: $grey-light;
+      margin-right: 0.5em;
+    }
+
+    &.is-active {
+      box-shadow: $large-shadow;
+
+      .icon {
+        color: $red;
+      }
+    }
+  }
+}
+
+.navbar {
+  &.has-shadow {
+    box-shadow: $large-shadow;
+  }
+}
+
+.navbar-item,
+.navbar-link {
+  padding: 0.75rem 1.5rem;
+}
+
+.navbar-link {
+  padding-right: 2.5em;
+}
+
+.navbar-item {
+  font-size: $size-5;
+}
+
+.navbar-start {
+  .navbar-item {
+    line-height: 1;
+    padding-left: 0;
+  }
+}
+
+.table {
+  box-shadow: $large-shadow;
+  font-size: 1.125rem;
+}
+
+.title {
+  @extend %heading;
+}
+
+h1.title {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+@include mobile() {
+  .media {
+    flex-direction: column;
+  }
+
+  .media-left {
+    margin: 0 0 0.5rem;
+  }
+}
+
+@include desktop() {
+  .navbar-dropdown .navbar-item {
+    padding: 0.75rem 1.5rem;
+
+    .icon {
+      margin-right: 1em;
+    }
+  }
+}
