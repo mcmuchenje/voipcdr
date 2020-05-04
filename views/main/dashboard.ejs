@@ -32,6 +32,15 @@
                   Calls
                 </a>
               </li>
+	      <li>
+                <a href="/voice/recordings/1">
+                  <span class="icon">
+                    <i class="fa fa-volume-up"></i>
+                  </span>
+                  Recordings
+                </a>
+              </li>
+
             </ul>
           </nav>
         </div>
@@ -46,7 +55,7 @@
             <div class="level-right">
               <div class="select">
                 <select>
-                  <option selected>Today</option>
+                  <option name="Today" selected>Today</option>
                   <option>Yesterday</option>
                   <option>This Week</option>
                   <option>This Month</option>
@@ -128,7 +137,7 @@ var chart = new Chart(ctx, {
 
     // The data for our dataset
     data: {
-        labels: ['<%= maxCaller[0].src %>', '<%= maxCaller[1].src %>', '<%= maxCaller[2].src %>', '<%= maxCaller[3].src %>', '<%= maxCaller[4].src %>'],
+        labels: ['<%= maxCaller[0].src || null %>', '<%= maxCaller[1].src || null %>', '<%= maxCaller[2].src || null %>', '<%= maxCaller[3].src || null %>', '<%= maxCaller[4].src || null %>'],
         datasets: [{
             label: 'Total Minutes',
             backgroundColor: [
