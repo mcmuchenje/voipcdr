@@ -1,5 +1,5 @@
 <section class="hero is-dark">
-		<div class="hero-foot">
+		<div class="hero-foot footerbot">
 			<div class="container is-size-7">
 				<center>Made with 🍜 and 🍺 in Harare, Zimbabwe
 					<br>© 2020 Atarah Networks IT Services</center>
@@ -7,5 +7,15 @@
 			</div>
 		</div>
 	</section>
+	<script>
+var burger = document.querySelector('.burger');
+var menu = document.querySelector('.navbar-menu')
+if (burger !== null) {
+burger.addEventListener('click', function() {
+burger.classList.toggle('is-active');
+menu.classList.toggle('is-active');
+});
+}
+</script>
 </body>
 </html>

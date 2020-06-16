@@ -6,12 +6,13 @@
     <title>Login</title>
     <link rel="stylesheet" href="icons/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/website.css">
+     <link rel="stylesheet" href="/css/main.css">
   </head>
   <body>
 
     <section class="hero is-primary is-fullheight">
 
-              <div class="container">
+              <div class="container flash">
   <% if(error && error.length > 0) { %>
 <article class="message is-danger">
   <div class="message-body">
@@ -56,6 +57,17 @@
                     </span>
                   </div>
                 </div>
+
+                <div class="field">
+                  <label class="label">Secret Code</label>
+                  <div class="control has-icons-left">
+                    <input class="input" name="adminCode" type="text" placeholder="optional">
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-key"></i>
+                    </span>
+                  </div>
+                </div>
+
                 <div class="field">
                   <label class="checkbox">
                     <input type="checkbox">

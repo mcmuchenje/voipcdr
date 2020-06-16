@@ -22,6 +22,9 @@ router.get("/register", function(req, res){
 //handle signup logic
 router.post("/register", function(req, res){
     var newUser = new User({username: req.body.username});
+    if(req.body.adminCode === 'W!llD4l3fsn') {
+      newUser.isAdmin = true;
+    }
     User.register(newUser, req.body.password, function(err, user){
         if (err){
             req.flash("error", err.message); //let passport display error
@@ -38,7 +41,6 @@ router.post("/register", function(req, res){
 router.get("/login", function(req, res){
     res.render("login");
 });
-
 
 
 //LOGIN route + logic

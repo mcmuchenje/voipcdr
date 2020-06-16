@@ -32,6 +32,24 @@
                   Calls
                 </a>
               </li>
+	      <li>
+                <a href="/voice/recordings/1">
+                  <span class="icon">
+                    <i class="fa fa-volume-up"></i>
+                  </span>
+                  Recordings
+                </a>
+              </li>
+              <li>
+                <a href="/voice/report">
+                  <span class="icon">
+                    <i class="fa fa-bar-chart"></i>
+                  </span>
+                  Reports
+                </a>
+              </li>
+
+
             </ul>
           </nav>
         </div>
@@ -63,11 +81,11 @@
 	    <% sip.forEach(function(sip){ %>
               <tr>
                 <td>
-                    <strong><%= sip.description  %></strong>
+                    <strong><%= sip.name  %></strong>
                 </td>
                 <td><code>daniel@willdale.co.zw</code></td>
                 <td>
-                  <span><%= sip.user %></span>
+                  <span><%= sip.extension %></span>
                 </td>
                 <td>
                   <span class="tag is-success">Active</span>
