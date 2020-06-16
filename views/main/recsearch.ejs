@@ -25,49 +25,48 @@
                 </a>
               </li>
               <li>
-                <a class="is-active" href="/voice/calls/1">
+                <a href="/voice/calls/1">
                   <span class="icon">
                     <i class="fa fa-phone"></i>
                   </span>
                   Calls
                 </a>
               </li>
-	      <li>
-                <a href="/voice/recordings/1">
+              <li>
+                <a class="is-active" href="/voice/recordings/1">
                   <span class="icon">
                     <i class="fa fa-volume-up"></i>
                   </span>
                   Recordings
                 </a>
               </li>
-              <li>
-                <a href="/voice/report">
-                  <span class="icon">
-                    <i class="fa fa-bar-chart"></i>
-                  </span>
-                  Reports
-                </a>
-              </li>
-
-
             </ul>
           </nav>
         </div>
 
         <div class="column">
-          <h1 class="title ">Calls</h1>
+          <h1 class="title ">Recordings</h1>
+
+  <% if(currentUser.isAdmin === false ) { %>
+<div class="notification is-danger is-light">
+            You are not authorized to view this page 
+          </div>
+ <% } %>
+
+<% if(currentUser.isAdmin === true) { %>
 
           <nav class="level">
             <div class="level-left">
               <div class="level-item">
                 <p class="subtitle is-5">
-                  <strong><%= total.rows %></strong> calls
+                  <strong><%= total.rows %></strong> recordings
                 </p>
               </div>
               <div class="level-item is-hidden-tablet-only">
-                <div class="field has-addons">
+                  <form action='/voice/recordings/search' method="POST">
+    <div class="field has-addons">
                   <p class="control">
-                    <input class="input" type="text" placeholder="Extension #, User…">
+                    <input class="input" name='search' type="text" placeholder="Extension #, User…">
                   </p>
                   <p class="control">
                     <button class="button">
@@ -75,16 +74,17 @@
                     </button>
                   </p>
                 </div>
+  </form>
               </div>
             </div>
 
             <div class="level-right">
               <div class="select">
                 <select>
-                  <option>Today</option>
+                  <option selected>Today</option>
                   <option>Yesterday</option>
                   <option>This Week</option>
-                  <option selected>This Month</option>
+                  <option>This Month</option>
                   <option>This Year</option>
                   <option>All time</option>
                 </select>
@@ -95,58 +95,44 @@
           <table class="table is-hoverable is-fullwidth is-striped">
             <thead>
               <tr>
-	        <th>Call Time</th>
-                <th>Caller ID</th>
+                <th>Call Time</th>
                 <th>Source</th>
                 <th>Destination</th>
-                <th>Time (mins)</th>
-                <th>Status</th>
-                <th class="has-text-right">Total</th>
+                <th class='has-text-center'>Audio</th>
               </tr>
             </thead>
             <tfoot>
               <tr>
-	        <th>Call Time</th>
-                <th>Caller ID</th>
+                <th>Call Time</th>
                 <th>Source</th>
                 <th>Destination</th>
-                <th>Time (mins)</th>
-                <th>Status</th>
-                <th class="has-text-right">Total</th>
+                <th class='has-text-center'>Audio</th>
               </tr>
             </tfoot>
             <tbody>
 
-              <% calls.forEach(function(call){ %>
-              <tr>
-	        <td><%= call.calldate.toString().slice(0,25) %></td> 
-                <td>
-<strong><%= call.clid %></strong>
-                </td>
-                <td>
-<%= call.src %>
-                </td>
-                <td><%= call.dst %></td>
-                <td><%= (call.billsec / 60).toFixed(2) %></td>
-                <td>
-                  <% if(call.disposition === 'ANSWERED'){ %>
-                      <span class="tag is-success">Answered</span>
-                   <%  } else { %>
-                      <span class="tag is-warning">Not Answered</span>
-                   <%  } %>
-                </td>
-                <% if((call.RemoteIP === '172.16.12.39' || call.RemoteIP === '41.216.127.214') & call.disposition === 'ANSWERED' ){ %>
-                <td class="has-text-right"><strong>$<%= ((call.billsec / 60) * 0.85).toFixed(2) %></strong></td>
-                <%  } else { %>
-                  <td class="has-text-right"><strong>$0</strong></td>
-                  <%  } %>
-              </tr>
-               <% }); %>
 
+               <% rec.forEach(function(rec){ %>
+             <tr>
+                <td>
+                  <%= rec.item.calldate.toString().slice(0,25) %>
+                </td>
+                <td>
+                  <%= rec.item.src %>
+                </td>
+                <td><<%= rec.item.dst %></td>
+                <td>
+                  <audio controls>
+                    <source src="/recordings/<%= rec.item.rec_name %>.wav" type="audio/wav">
+                      Your browser does not support the audio element.
+                  </audio>
+                </td>
+              </tr>
+               <%  }); %>
 
             </tbody>
           </table>
-
+<% } %>
 
 <nav class="pagination">
             <% if (pages > 0) { %>
@@ -154,7 +140,7 @@
                     <% if (current == 1) { %>
                         <li class="disabled"><a class="pagination-link">First</a></li>
                     <% } else { %>
-                        <li><a href="/voice/calls/1" class="pagination-link">First</a></li>
+                        <li><a href="/voice/recordings/1" class="pagination-link">First</a></li>
                     <% } %>
                     <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
                     <% if (i !== 1) { %>
@@ -164,7 +150,7 @@
                         <% if (i == current) { %>
                             <li><a class="pagination-link is-current"><%= i %></a></li>
                         <% } else { %>
-                            <li><a class="pagination-link" href="/voice/calls/<%= i %>"><%= i %></a></li>
+                            <li><a class="pagination-link" href="/voice/recordings/<%= i %>"><%= i %></a></li>
                         <% } %>
                         <% if (i == Number(current) + 4 && i < pages) { %>
                             <li><a class="pagination-link">...</a></li>
@@ -173,12 +159,14 @@
                     <% if (current == pages) { %>
                         <li><a class="pagination-link">Last</a></li>
                     <% } else { %>
-                        <li><a class="pagination-link" href="/voice/calls/<%= pages %>">Last</a></li>
+                        <li><a class="pagination-link" href="/voice/recordings/<%= pages %>">Last</a></li>
                     <% } %>
                 </ul>
             <% } %>
-			</nav>
-        </div>
+                        </nav>
+
+
+</div>
       </div>
     </section>
 
