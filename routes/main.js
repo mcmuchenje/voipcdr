@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router(); //a new instance of express router and adding routes to this router. 
-var models = require("../models");
+var db = require("../models");
 var extension = require("../models/extension");
 var middleware = require("../middleware");
 const { Op } = require("sequelize");
@@ -8,7 +8,8 @@ const { Op } = require("sequelize");
 router.get('/test', async function(req , res){
   var day = new Date();
   var day = day.toISOString().substring(0, 10);
-  const incoming = await models.cdr.count({
+  console.log(db)
+  const incoming = await db.cdr.count({
     where: {
       dcontext: 'ext-queues',
       calldate: {
@@ -17,7 +18,7 @@ router.get('/test', async function(req , res){
     }
   });
 
-  const outgoing = await models.cdr.count({
+  const outgoing = await db.cdr.count({
     where: {
       RemoteIP: '172.16.12.39',
       calldate: {
@@ -26,7 +27,7 @@ router.get('/test', async function(req , res){
     }
   });
 
-  const top5 = await models.cdr.findAll({
+  const top5 = await db.cdr.findAll({
     where: {
       calldate: {
         [Op.startsWith]: day
@@ -38,7 +39,7 @@ router.get('/test', async function(req , res){
     limit: 5
   });
 
-  const sum = await models.cdr.sum('billsec', {
+  const sum = await db.cdr.sum('billsec', {
     where: {
       disposition: 'ANSWERED',
       RemoteIP: '172.16.12.39',
