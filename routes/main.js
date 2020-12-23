@@ -1,11 +1,55 @@
 var express = require("express");
 var router = express.Router(); //a new instance of express router and adding routes to this router. 
-var db = require("../models");
+var models = require("../models");
 var extension = require("../models/extension");
 var middleware = require("../middleware");
-var Fuse = require("fuse.js");
+const { Op } = require("sequelize");
 
-//INDEX ROUTE - show dashboard
+router.get('/test', async function(req , res){
+  var day = new Date();
+  var day = day.toISOString().substring(0, 10);
+  const incoming = await models.cdr.count({
+    where: {
+      dcontext: 'ext-queues',
+      calldate: {
+        [Op.startsWith]: day
+      }
+    }
+  });
+
+  const outgoing = await models.cdr.count({
+    where: {
+      RemoteIP: '172.16.12.39',
+      calldate: {
+        [Op.startsWith]: day
+      }
+    }
+  });
+
+  const top5 = await models.cdr.findAll({
+    where: {
+      calldate: {
+        [Op.startsWith]: day
+      }     
+    },
+    order: [
+        ['billsec', 'DESC']
+    ],
+    limit: 5
+  });
+
+  const sum = await models.cdr.sum('billsec', {
+    where: {
+      disposition: 'ANSWERED',
+      RemoteIP: '172.16.12.39',
+      calldate: {
+        [Op.startsWith]: day
+      }
+    }
+  })
+	
+  res.send(JSON.stringify({incoming , outgoing, top5, sum}));
+})
 
 router.get('/', middleware.isLoggedIn, function(req , res) {
   let i = 1;

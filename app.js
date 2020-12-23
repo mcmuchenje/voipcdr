@@ -56,6 +56,6 @@ app.use(function(req, res, next){
 app.use("/", indexRoutes);
 app.use("/voice", dashboardRoutes);
 
-app.listen(3000,'127.0.0.1', function(){
+app.listen(3000,'192.168.100.17', function(){
     console.log("VoIP Server has Started!");
 });

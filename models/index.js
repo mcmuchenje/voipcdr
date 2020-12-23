@@ -1,12 +1,18 @@
-// create mysql pool for multiple connections
-const mysql = require('mysql');
-const pool  = mysql.createPool({
-  connectionLimit : 10,
-  host: "localhost",
-  user: "admin",
-  password: "somepassword",
-  database: "asteriskcdrdb",
-  multipleStatements: true
-});
+const { Sequelize } = require('sequelize');
 
-module.exports = pool;
+const sequelize = new Sequelize('mariadb://root:cuthbertM1@localhost:3306/asteriskcdrdb') 
+var initModels = require("./init-models");
+var models = initModels(sequelize);
+
+
+async function main() {
+	try {
+	await sequelize.authenticate();
+        console.log('Connection has been established successfully.');
+	} catch (error) {
+  		console.error('Unable to connect to the database:', error);
+	}
+}
+
+main()
+module.exports = models
