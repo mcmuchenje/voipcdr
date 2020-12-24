@@ -80,21 +80,21 @@
           <div class="columns is-multiline">
             <div class="column is-12-tablet is-6-desktop is-3-widescreen">
               <div class="notification is-link has-text">
-                <p class="title is-2"><%= internal.incoming %></p>
+                <p class="title is-2"><%= incoming %></p>
                 <p class="subtitle is-4">Incoming Calls</p>
               </div>
             </div>
 
             <div class="column is-12-tablet is-6-desktop is-3-widescreen">
               <div class="notification is-info has-text">
-                <p class="title is-2"><%= out.outgoing %></p>
+                <p class="title is-2"><%= outgoing %></p>
                 <p class="subtitle is-4">Outgoing Calls</p>
               </div>
             </div>
 
             <div class="column is-12-tablet is-6-desktop is-3-widescreen">
               <div class="notification is-primary has-text">
-                <p class="title is-2">$<%= (( total.sum / 60 ) * 0.85).toFixed(2) %> </p>
+                <p class="title is-2">$<%= (( sum / 60 ) * 0.85).toFixed(2) %> </p>
                 <p class="subtitle is-4">Total Cost (approx)</p>
               </div>
             </div>
@@ -115,7 +115,7 @@
                     Top 5 Users Today
                   </h2>
 
-                   <% maxCaller.forEach(function(caller){ %>                
+                   <% top5.forEach(function(caller){ %>                
 				 <div class="media">
                     <div class="media-left is-marginless">
                       <p class="number"><%= i++ %></p>
@@ -148,7 +148,6 @@ var chart = new Chart(ctx, {
 
     // The data for our dataset
     data: {
-        labels: ['<%= maxCaller[0].src || null %>', '<%= maxCaller[1].src || null %>', '<%= maxCaller[2].src || null %>', '<%= maxCaller[3].src || null %>', '<%= maxCaller[4].src || null %>'],
         datasets: [{
             label: 'Total Minutes',
             backgroundColor: [
@@ -164,7 +163,6 @@ var chart = new Chart(ctx, {
                 'rgba(75, 192, 192, 1)',
                 'rgba(153, 102, 255, 1)'],
 		borderWidth: 1,
-            data: [<%= (maxCaller[0].billsec / 60).toFixed(2) %>,<%= (maxCaller[1].billsec / 60).toFixed(2) %>, <%= (maxCaller[2].billsec / 60).toFixed(2) %>, <%= (maxCaller[3].billsec / 60).toFixed(2) %>, <%= (maxCaller[4].billsec / 60).toFixed(2) %>]
         }]
     },
 

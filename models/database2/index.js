@@ -1,4 +1,4 @@
-require ('custom-env').env('app', (__dirname + '/../'))
+require ('custom-env').env('asterisk', (__dirname + '/../../'))
 
 const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.DB_PASS, {
@@ -7,7 +7,7 @@ const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, pr
 });
 
 const initModels = require("./init-models");
-const models = initModels(sequelize);
+const db = initModels(sequelize);
 
 async function main() {
 	try {
@@ -19,4 +19,4 @@ async function main() {
 }
 
 main()
-module.exports = models
+module.exports = db

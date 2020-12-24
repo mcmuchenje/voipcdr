@@ -1,14 +1,13 @@
 var express = require("express");
-var router = express.Router(); //a new instance of express router and adding routes to this router. 
-var db = require("../models");
-var extension = require("../models/extension");
+var router = express.Router();
+var db = require("../models/database1");
+var db2 = require("../models/database2");
 var middleware = require("../middleware");
 const { Op } = require("sequelize");
 
-router.get('/test', async function(req , res){
+router.get('/test', middleware.isLoggedIn,  async function(req , res){
   var day = new Date();
   var day = day.toISOString().substring(0, 10);
-  console.log(db)
   const incoming = await db.cdr.count({
     where: {
       dcontext: 'ext-queues',
@@ -48,40 +47,20 @@ router.get('/test', async function(req , res){
       }
     }
   })
-	
-  res.send(JSON.stringify({incoming , outgoing, top5, sum}));
+
+  res.render('main/dashboard', { incoming , outgoing , top5 , sum })
 })
 
-router.get('/', middleware.isLoggedIn, function(req , res) {
-  let i = 1;
-  let today = new Date();
-  let todayDate = today.toISOString().substring(0, 10);
-  let maxQuery = `select count(*) as incoming from cdr where dcontext='ext-queues' and calldate like '${todayDate}%'; select count(*) as outgoing from cdr where RemoteIP='172.16.12.39' and calldate like '${todayDate}%'; SELECT * FROM cdr WHERE calldate LIKE '${todayDate}%' ORDER BY billsec DESC LIMIT 5;select sum(billsec) as sum from cdr where disposition='ANSWERED' and RemoteIP='172.16.12.39' and calldate like '${todayDate}%'; `
-  db.getConnection(function(err , connection){
-    connection.query(maxQuery, function(error, results,fields) {
-      connection.release()
-      if (error) throw error;
-      let internal = results[0][0]
-      let out = results[1][0]
-      let total = results[3][0]
-      //res.send(JSON.stringify(results));
-      res.render('main/dashboard', { maxCaller: results[2] , i , internal , out , total })
-      console.log(today.toISOString())
-    })
-  })
+router.get('/extension', middleware.isLoggedIn, async function(res, res){
+  const sip = await db2.users.findAll({
+    order: [
+        ['extension', 'ASC']
+    ]
+  });
+
+  res.render('main/extension', { sip })
 })
 
-router.get('/extensions', middleware.isLoggedIn, function(req , res){
-  let extensionQuery = "SELECT * FROM users order by extension"
-  extension.getConnection(function(err, connection) {
-    connection.query(extensionQuery, function(error , results, fields){
-      connection.release();
-      if (error) throw error;
-      //res.send(JSON.stringify(results));
-      res.render('main/extension' , { sip: results });
-    })
-  })
-})
 
 router.get("/calls/:page", middleware.isLoggedIn, function(req , res) {
   const limit = 50
@@ -115,43 +94,4 @@ router.get('/recordings/:page', middleware.isLoggedIn, function(req , res) {
   })
 })
 
-router.post('/recordings/search', middleware.isLoggedIn, function(req, res) {
-	const limit = 50
-    const page = req.params.page || 1
-    const offset = (page - 1) * limit
-    let rec = "select count(*) as rows from cdr where rec_name NOT LIKE 'q%' " +";"+ "SELECT * FROM cdr WHERE disposition='ANSWERED' AND rec_name NOT LIKE 'q%' ORDER  BY calldate DESC limit "+limit+" OFFSET "+offset
-    db.getConnection(function(err, connection) {
-    	connection.query(rec, function (error, results, fields) {
-    		connection.release();
-    		if (error) throw error;
-            let total = results[0][0];
-            const options = {
-  			// isCaseSensitive: false,
-  			// includeScore: 0,
-  			// shouldSort: true,
- 			// includeMatches: true,
-  			// findAllMatches: false,
-  			// minMatchCharLength: 1,
-  			// location: 0,
-  			// threshold: 0.6,
-  			// distance: 100,
-  			// useExtendedSearch: false,
-  				keys: [
-  				  "dst"
-  				]
-			};
-			let name= req.body.search;
-
-			const fuse = new Fuse(results[1], options);
-
-			// Change the pattern
-			const pattern = req.body.search;
-
-			const search = fuse.search(pattern)
-			
-    	    //res.send(JSON.stringify(search));
-            res.render('main/recsearch' , { rec: search, current: page, pages: Math.ceil(total.rows / limit), total } )
-        })
-    })
-  })
 module.exports = router;

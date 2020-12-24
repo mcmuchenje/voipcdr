@@ -1,8 +1,0 @@
-{
-	"host": "localhost",
-	"username": "root",
-	"password": "cuthbertM1",
-	"dbname": "asteriskcdrdb",
-	"port": 3306,
-	"dialect": "mariadb"
-}
