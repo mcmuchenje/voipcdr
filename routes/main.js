@@ -6,6 +6,7 @@ var middleware = require("../middleware");
 const { Op } = require("sequelize");
 
 router.get('/test', middleware.isLoggedIn,  async function(req , res){
+  var i = 1
   var day = new Date();
   var day = day.toISOString().substring(0, 10);
   const incoming = await db.cdr.count({
@@ -48,7 +49,7 @@ router.get('/test', middleware.isLoggedIn,  async function(req , res){
     }
   })
 
-  res.render('main/dashboard', { incoming , outgoing , top5 , sum })
+  res.render('main/dashboard', { incoming , outgoing , top5 , sum , i })
 })
 
 router.get('/extension', middleware.isLoggedIn, async function(res, res){
