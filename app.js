@@ -1,14 +1,18 @@
-const express     = require("express"),
-    app         = express(),
-    bodyParser  = require("body-parser"),
-    mongoose    = require("mongoose"),
-    passport    = require("passport"),
-    flash       = require("connect-flash"),
-    LocalStrategy   = require("passport-local"),
-    User        = require("./models/user")
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const passport = require("passport");
+const flash = require("connect-flash");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user");
 
+const app = express();
 
-//REQUIRING ROUTES    
+require('./services/passport');
+const authRoutes = require('./routes/authRoutes');
+
+authRoutes(app);
+   
 const indexRoutes = require("./routes/index"),
       dashboardRoutes = require("./routes/main");
 
@@ -56,6 +60,6 @@ app.use(function(req, res, next){
 app.use("/", indexRoutes);
 app.use("/voice", dashboardRoutes);
 
-app.listen(3000,'192.168.100.17', function(){
+app.listen(5000, function(){
     console.log("VoIP Server has Started!");
 });
