@@ -1,7 +1,8 @@
-var express = require("express");
-var app = express();
-var db = require("../models/database1");
-var db2 = require("../models/database2");
+const express = require("express");
+const app = express();
+const paginate = require('express-paginate');
+const db = require("../models/database1");
+const db2 = require("../models/database2");
 const { Op } = require("sequelize");
 
 
@@ -62,5 +63,47 @@ app.get('/api/extension', async function(res, res){
 
   res.send({ sip })
 })
+
+app.use(paginate.middleware(10, 50));
+
+app.get("/api/calls", (req, res, next ) => {
+  db.cdr.findAndCountAll({
+    limit: req.query.limit,
+    offset: req.skip,
+    order: [
+      ['calldate', 'DESC']
+    ]
+  })
+  .then(results => {
+    const itemCount = results.count;
+    const pageCount = Math.ceil(results.count / req.query.limit);
+    res.send({
+      calls: results.rows,
+      pageCount,
+      itemCount,
+      pages: paginate.getArrayPages(req)(3, pageCount, req.query.page)
+    });
+  }).catch(err => next(err))
+});
+
+app.get("/api/recording", (req, res ) => {
+  db.cdr.findAndCountAll({
+    limit: req.query.limit,
+    offset: req.skip,
+    order: [
+      ['calldate', 'DESC']
+    ]
+  })
+  .then(results => {
+    const itemCount = results.count;
+    const pageCount = Math.ceil(results.count / req.query.limit);
+    res.send({
+      calls: results.rows,
+      pageCount,
+      itemCount,
+      pages: paginate.getArrayPages(req)(3, pageCount, req.query.page)
+    });
+  }).catch(err => next(err))
+});
 
 };
