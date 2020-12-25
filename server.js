@@ -60,6 +60,6 @@ app.use(function(req, res, next){
 app.use("/", indexRoutes);
 app.use("/voice", dashboardRoutes);
 
-app.listen(8080, function(){
+app.listen(5000, function(){
     console.log("VoIP Server has Started!");
 });
