@@ -1,65 +1,31 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 const passport = require("passport");
-const flash = require("connect-flash");
-const LocalStrategy = require("passport-local");
-const User = require("./models/user");
+const mongoose = require('mongoose');
+const cookieSession =require('cookie-session');
+
+const port = 5000
+
+const keys = require('./config/keys');
+require('./models/User');
+require('./services/passport');
+
+mongoose.Promise = global.Promise;
+mongoose.connect(keys.mongoURI, { useNewUrlParser: true , useUnifiedTopology: true });
 
 const app = express();
 
-require('./services/passport');
-const authRoutes = require('./routes/authRoutes');
-
-authRoutes(app);
-   
-const indexRoutes = require("./routes/index"),
-      dashboardRoutes = require("./routes/main");
-
-//MONGOOSE CONNECTION
-mongoose.set("debug", true);
-mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/voip", {
-        keepAlive: true,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-}).then(res=> {
-	console.log("Mongodb Connected!")
-	}).catch(err => {
-		console.log(Error, err.message);
-    });
-
-mongoose.set('useCreateIndex', true)
-
-app.use(bodyParser.urlencoded({extended: true}));
-app.set("view engine", "ejs");
-app.use(express.static(__dirname + "/public"));
-app.use(flash());
-
-//PASSPORT CONFIGURATION
-app.use(require("express-session")({
-    secret: "munyaradzi muchenje",
-    resave: false,
-    saveUninitialized: false
-}));
-
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: [keys.cookieKey]
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
-app.use(function(req, res, next){
-   res.locals.currentUser = req.user;
-   res.locals.error = req.flash("error");
-   res.locals.success = req.flash("success");
-   next(); 
-});
-
-
-app.use("/", indexRoutes);
-app.use("/voice", dashboardRoutes);
-
-app.listen(5000, function(){
-    console.log("VoIP Server has Started!");
-});
+require('./routes/authRoutes')(app);
+require('./routes/test')(app);
+   
+app.listen(port, () => {
+  console.log(`app listening at http://localhost:${port}`)
+})
