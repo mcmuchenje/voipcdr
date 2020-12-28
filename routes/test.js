@@ -9,7 +9,7 @@ const { Op } = require("sequelize");
 
 module.exports = (app) => {
 
-app.get('/api/voice', requireLogin, async function(req , res){
+app.get('/api/voice', async function(req , res){
   var day = new Date();
   var day = day.toISOString().substring(0, 10);
   const incoming = await db.cdr.count({
