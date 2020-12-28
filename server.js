@@ -2,6 +2,7 @@ const express = require("express");
 const passport = require("passport");
 const mongoose = require('mongoose');
 const cookieSession =require('cookie-session');
+const morgan = require('morgan')
 
 const port = 5000
 
@@ -13,6 +14,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(keys.mongoURI, { useNewUrlParser: true , useUnifiedTopology: true });
 
 const app = express();
+app.use(morgan('dev'))
 
 app.use(
   cookieSession({

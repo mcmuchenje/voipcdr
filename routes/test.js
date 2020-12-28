@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const paginate = require('express-paginate');
+const requireLogin = require('../middlewares/requireLogin')
 const db = require("../models/database1");
 const db2 = require("../models/database2");
 const { Op } = require("sequelize");
@@ -8,7 +9,7 @@ const { Op } = require("sequelize");
 
 module.exports = (app) => {
 
-app.get('/api/voice', async function(req , res){
+app.get('/api/voice', requireLogin, async function(req , res){
   var day = new Date();
   var day = day.toISOString().substring(0, 10);
   const incoming = await db.cdr.count({
@@ -54,7 +55,7 @@ app.get('/api/voice', async function(req , res){
   res.send({ incoming , outgoing , top5 , sum })
 })
 
-app.get('/api/extension', async function(res, res){
+app.get('/api/extension', requireLogin, async function(res, res){
   const sip = await db2.users.findAll({
     order: [
         ['extension', 'ASC']
@@ -66,7 +67,7 @@ app.get('/api/extension', async function(res, res){
 
 app.use(paginate.middleware(10, 50));
 
-app.get("/api/calls", (req, res, next ) => {
+app.get("/api/calls",requireLogin, (req, res, next ) => {
   db.cdr.findAndCountAll({
     limit: req.query.limit,
     offset: req.skip,
@@ -86,7 +87,7 @@ app.get("/api/calls", (req, res, next ) => {
   }).catch(err => next(err))
 });
 
-app.get("/api/recording", (req, res ) => {
+app.get("/api/recording",requireLogin, (req, res ) => {
   db.cdr.findAndCountAll({
     limit: req.query.limit,
     offset: req.skip,
