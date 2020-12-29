@@ -2,3 +2,5 @@ node_modules
 public/recordings/
 keys.js
 npm-debug.log
+.env.cdr
+.env.asterisk
