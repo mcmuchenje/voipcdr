@@ -10,6 +10,7 @@ const { Op } = require("sequelize");
 module.exports = (app) => {
 
 app.get('/api/voice', async function(req , res){
+  var i = 1;
   var day = new Date();
   var day = day.toISOString().substring(0, 10);
   const incoming = await db.cdr.count({
@@ -52,7 +53,7 @@ app.get('/api/voice', async function(req , res){
     }
   })
 
-  res.send({ incoming , outgoing , top5 , sum })
+  res.send({ incoming , outgoing , top5 , sum, i })
 })
 
 app.get('/api/extension', requireLogin, async function(res, res){
