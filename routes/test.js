@@ -56,7 +56,7 @@ app.get('/api/voice', async function(req , res){
   res.send({ incoming , outgoing , top5 , sum, i })
 })
 
-app.get('/api/extension', requireLogin, async function(res, res){
+app.get('/api/extension', async function(res, res){
   const sip = await db2.users.findAll({
     order: [
         ['extension', 'ASC']
@@ -66,9 +66,9 @@ app.get('/api/extension', requireLogin, async function(res, res){
   res.send({ sip })
 })
 
-app.use(paginate.middleware(10, 50));
+app.use(paginate.middleware(50, 100));
 
-app.get("/api/calls",requireLogin, (req, res, next ) => {
+app.get("/api/calls", (req, res, next ) => {
   db.cdr.findAndCountAll({
     limit: req.query.limit,
     offset: req.skip,
